@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankIslami App Redirect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h2 {
+            color: #004d40;
+        }
+        p {
+            color: #666;
+        }
+        a {
+            color: #004d40;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Opening BankIslami App...</h2>
+        <p>If the app does not open automatically, use the link below.</p>
+        <p>
+            <a href="https://apps.apple.com/pk/app/aik/id6740029815">
+                Download on the App Store
+            </a>
+        </p>
+        <p>
+            <a href="https://play.google.com/store/apps/details?id=com.wallet.bankislami">
+                Get it on Google Play
+            </a>
+        </p>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            var packageName = "com.wallet.bankislami";
+            var playStoreUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+            var iosAppStoreUrl = "https://apps.apple.com/pk/app/aik/id6740029815";
+            var websiteUrl = "https://aikdigital.com";
+
+            // 1. Android
+            if (/android/i.test(userAgent)) {
+                var iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                iframe.src = "intent://open#Intent;scheme=bankislami;package=" + packageName + ";end;";
+                document.body.appendChild(iframe);
+
+                setTimeout(function () {
+                    window.location.href = playStoreUrl;
+                }, 1200);
+            }
+            // 2. iOS — page loads only if Universal Link did not open the app
+            else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                var leftToApp = false;
+                var markLeft = function () { leftToApp = true; };
+
+                window.addEventListener("pagehide", markLeft);
+                window.addEventListener("blur", markLeft);
+                document.addEventListener("visibilitychange", function () {
+                    if (document.hidden) leftToApp = true;
+                });
+
+                setTimeout(function () {
+                    if (!leftToApp) {
+                        window.location.href = iosAppStoreUrl;
+                    }
+                }, 1500);
+            }
+            // 3. Desktop
+            else {
+                window.location.href = websiteUrl;
+            }
+        };
+    </script>
+
+</body>
+</html>
